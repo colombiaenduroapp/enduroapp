@@ -1,7 +1,14 @@
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 5000
+
+
+
+const app= require('./app/app')
 require('./app/config/conection')
 
 app.get('/', (req, res) => res.send('Hello World!'))
-app.listen(port, () => console.log(`Example app listening on port port!`))
+app.listen(app.get('port'),(error)=>{
+    if(error){
+        console.log(`ha ocurrido un error: ${error}`)
+    } else{
+     console.log(`Servidor corriendo en puerto : ${app.get('port')}`)
+    }
+ })
