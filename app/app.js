@@ -1,10 +1,9 @@
 const express = require('express')
 const app = express()
-const port = process.env.port || 5000
 
 
 
-app.set('port',port)
+
 
 
 app.use(express.urlencoded({extended: false}))
@@ -17,10 +16,10 @@ app.use(express.urlencoded({extended: false}))
 
 //--------routes ciudad
 app.use(require('./routes/ciudad.route'));
-//--------routes sede
-app.use(require('./routes/sede.route'));
-//--------routes empresa
-app.use(require('./routes/empresa.route'));
+// // //--------routes sede
+// app.use(require('./routes/sede.route'));
+// //--------routes empresa
+// app.use(require('./routes/empresa.route'));
 
 
 
