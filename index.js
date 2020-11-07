@@ -7,6 +7,6 @@ app.listen(port, '0.0.0.0',(error)=>{
     if(error){
         console.log(`ha ocurrido un error: ${error}`)
     } else{
-     console.log(`Servidor corriendo en puerto : `)
+     console.log(`Servidor corriendo : `)
     }
  })
