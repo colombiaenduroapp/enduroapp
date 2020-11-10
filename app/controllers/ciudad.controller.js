@@ -6,7 +6,7 @@ const ciudad = {}
 ciudad.getCiudad = async(req, res) => {
     pool.query('SELECT * from ciudad', (err, resul) => {
         if (err) throw err;
-        else if (resul.length != 0) res.json({resul })
+        else if (resul.length != 0) res.json({ status: true, data: resul })
         else res.json({ status: false });
     })
 }
