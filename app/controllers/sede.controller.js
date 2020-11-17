@@ -76,9 +76,9 @@
 
 const pool = require('../config/conection');
 
-const ciudad = {}
+const sede = {}
 
-ciudad.getSede = async(req, res) => {
+sede.getSede = async(req, res) => {
     pool.query('SELECT * from Sede', (err, resul) => {
         if (err) throw err;
         else if (resul.length != 0) res.json({ status: true, data: resul })
