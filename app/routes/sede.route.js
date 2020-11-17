@@ -1,13 +1,13 @@
 
-// const route = require('express').Router();
+const route = require('express').Router();
 
-// const {getSede,getOneSede,addSede,editSede,deleteSede}= require('../controllers/sede.controller')
+const ciudad= require('../controllers/sede.controller')
 
-// route.route('/sede').get(getSede)
-// route.route('/sede/:sd_cdgo').get(getOneSede)
-// route.route('/sede').post(addSede)
-// route.route('/sede/:sd_cdgo').put(editSede)
-// route.route('/sede/:sd_cdgo').delete(deleteSede)
+route.route('/sede').get(sede.getSede)
+// route.route('/ciudad:cd_cdgo').get(getOneCiudad)
+// route.route('/ciudad').post(ciudad.addCiudad)
+// route.route('/ciudad:cd_cdgo').put(editCiudad)
+// route.route('/ciudad:cd_cdgo').delete(deleteCiudad)
 
 
-// module.exports=route
+module.exports=route
