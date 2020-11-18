@@ -1,7 +1,7 @@
 
 const route = require('express').Router();
 
-const ciudad= require('../controllers/sede.controller')
+const sede = require('../controllers/sede.controller');
 
 route.route('/sede').get(sede.getSede)
 // route.route('/ciudad:cd_cdgo').get(getOneCiudad)

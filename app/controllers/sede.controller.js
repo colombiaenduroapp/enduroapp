@@ -98,18 +98,18 @@ sede.getSede = async(req, res) => {
 //     }
 // }
 
-ciudad.addCiudad= async(req,res)=> {
-    const {cd_desc,cd_cdgo}=req.body
-    const datos={
-        cd_cdgo:cd_cdgo,
-        cd_desc:cd_desc,
-        cd_estado:"true"
-    }
-    pool.query('insert into ciudad set ?',datos , (err) => {
-        if (err) throw err;
-        res.json({ status: true });
-    });
-}
+// sede.addCiudad= async(req,res)=> {
+//     const {cd_desc,cd_cdgo}=req.body
+//     const datos={
+//         cd_cdgo:cd_cdgo,
+//         cd_desc:cd_desc,
+//         cd_estado:"true"
+//     }
+//     pool.query('insert into ciudad set ?',datos , (err) => {
+//         if (err) throw err;
+//         res.json({ status: true });
+//     });
+// }
 
 
 // async function editCiudad(req,res) {
@@ -136,4 +136,4 @@ ciudad.addCiudad= async(req,res)=> {
 // }
 
 
-module.exports = ciudad
+module.exports = sede
