@@ -79,7 +79,7 @@ const pool = require('../config/conection');
 const sede = {}
 
 sede.getSede = async(req, res) => {
-    pool.query('SELECT * from Sede', (err, resul) => {
+    pool.query('SELECT * from sede', (err, resul) => {
         if (err) throw err;
         else if (resul.length != 0) res.json({ status: true, data: resul })
         else res.json({ status: false });
