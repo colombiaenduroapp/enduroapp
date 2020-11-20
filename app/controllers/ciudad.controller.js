@@ -1,5 +1,6 @@
 
 const pool = require('../config/conection');
+const  fs = require("fs");
 
 const ciudad = {}
 
@@ -22,6 +23,18 @@ ciudad.getCiudad = async(req, res) => {
 //         console.error('haocurrido un error');
 //     }
 // }
+
+ciudad.addImage= async(req, res)=>{
+    var name = req.body.name;
+    console.log(name)
+    var img = req.body.image;
+    var realFile = Buffer.from(img,"base64");
+    fs.writeFileSync('images_sedes/'+name, realFile,'utf8');
+
+    await res.send("OK");
+     
+   }
+  
 
 ciudad.addCiudad= async(req,res)=> {
     const {cd_desc,cd_cdgo}=req.body

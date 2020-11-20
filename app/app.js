@@ -6,7 +6,7 @@ const app = express()
 
 
 
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: false, limit: (52428800) }))
 
 
 
