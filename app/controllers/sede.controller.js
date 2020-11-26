@@ -87,6 +87,34 @@ sede.getSede = async(req, res) => {
 }
 
 
+sede.addImage= async(req, res)=>{
+    var name = req.body.sd_desc;
+    
+    var sd_logo= req.body.sd_logo;
+    var sd_jersey = req.body.sd_jersey;
+    var sd_ciudad_cd_cdgo = req.body.sd_ciudad_cd_cdgo;
+    
+
+    const datos={
+        sd_desc:name,
+        sd_logo:sd_logo,
+        sd_jersey:sd_jersey,
+        sd_ciudad_cd_cdgo:sd_ciudad_cd_cdgo
+    }
+
+    pool.query('insert into sede set ?',datos , (err,resul) => {
+        if (err) throw err;
+        res.json({ status: true});
+    })
+    // var img = req.body.sd_logo;
+    // console.log(img)
+    // var realFile = Buffer.from(img,"base64");
+    // fs.writeFileSync('images_sedes/'+name, realFile,'utf8');
+
+    
+     
+   }
+
 // async function getOneCiudad(req,res) {
 //     const {cd_cdgo}=req.params
 //     try{

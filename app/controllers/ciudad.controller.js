@@ -3,8 +3,10 @@ const pool = require('../config/conection');
 const  fs = require("fs");
 
 const ciudad = {}
-
+var os = require("os");
+var hostname = os.hostname();
 ciudad.getCiudad = async(req, res) => {
+    console.log(hostname)
     pool.query('SELECT * from ciudad', (err, resul) => {
         if (err) throw err;
         else if (resul.length != 0) res.json({ status: true, data: resul })
@@ -25,11 +27,13 @@ ciudad.getCiudad = async(req, res) => {
 // }
 
 ciudad.addImage= async(req, res)=>{
-    var name = req.body.name;
+    var name = req.body.sd_desc;
+
     console.log(name)
-    var img = req.body.image;
-    var realFile = Buffer.from(img,"base64");
-    fs.writeFileSync('images_sedes/'+name, realFile,'utf8');
+    // var img = req.body.sd_logo;
+    // console.log(img)
+    // var realFile = Buffer.from(img,"base64");
+    // fs.writeFileSync('images_sedes/'+name, realFile,'utf8');
 
     await res.send("OK");
      
@@ -41,6 +45,7 @@ ciudad.addCiudad= async(req,res)=> {
     const datos={
         cd_cdgo:cd_cdgo,
         cd_desc:cd_desc,
+        
         cd_estado:"true"
     }
     pool.query('insert into ciudad set ?',datos , (err) => {
