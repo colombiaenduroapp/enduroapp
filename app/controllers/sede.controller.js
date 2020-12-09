@@ -13,8 +13,8 @@ const { json } = require('express');
 
 sede.getSede = async(req,res) => {
     pool.query('SELECT sd_cdgo,sd_desc,sd_logo,sd_jersey from sede where sd_estado=1', (err, resul) => {
-        var url_image='http://192.168.100.181:5000/sede/image/'
-        var url_imageJersey='http://192.168.100.181:5000/sede/imagejersey/'
+        var url_image='https://colombiaenduro.herokuapp.com/sede/image/'
+        var url_imageJersey='https://colombiaenduro.herokuapp.com/sede/imagejersey/'
         for(let i=0;i<resul.length;i++){
             
             let sd_logo=resul[i]['sd_logo'];
