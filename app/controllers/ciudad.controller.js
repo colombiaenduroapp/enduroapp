@@ -1,43 +1,16 @@
 
 const pool = require('../config/conection');
-const  fs = require("fs");
+
 
 const ciudad = {}
-var os = require("os");
-var hostname = os.hostname();
 ciudad.getCiudad = async(req, res) => {
-    console.log(hostname)
+    
     pool.query('SELECT * from ciudad', (err, resul) => {
         if (err) throw err;
         else if (resul.length != 0) res.json({ status: true, data: resul })
-        else res.json({ status: false });
+    else res.json({ status: false });
     })
 }
-
-
-// async function getOneCiudad(req,res) {
-//     const {cd_cdgo}=req.params
-//     try{
-//         let sql=`select * from ciudad where cd_cdgo=${connection.escape(cd_cdgo)}`
-//         const rows= await query(sql)
-//         res.json(rows)
-//     }catch{
-//         console.error('haocurrido un error');
-//     }
-// }
-
-ciudad.addImage= async(req, res)=>{
-    var name = req.body.sd_desc;
-
-    console.log(name)
-    // var img = req.body.sd_logo;
-    // console.log(img)
-    // var realFile = Buffer.from(img,"base64");
-    // fs.writeFileSync('images_sedes/'+name, realFile,'utf8');
-
-    await res.send("OK");
-     
-   }
   
 
 ciudad.addCiudad= async(req,res)=> {
