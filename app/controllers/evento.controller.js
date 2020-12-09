@@ -2,6 +2,7 @@ const pool = require('../config/conection');
 const  fs = require("fs");
 const evento = {}
 var path = require('path');
+const url_servidor='https://colombiaenduro.herokuapp.com/'
 const { json } = require('express');
 
 
@@ -10,7 +11,7 @@ const { json } = require('express');
 
 evento.getEvento = async(req,res) => {
     pool.query(' SELECT ev_cdgo,ev_sede_sd_cdgo,ev_usuario_us_cdgo,DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") as ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") as ev_fecha_fin,ev_desc,ev_lugar,ev_img,us_nombres,sd_desc,datediff(ev_fecha_inicio,now())as ev_faltante from evento join usuario on ev_usuario_us_cdgo=us_cdgo join sede on sd_cdgo=us_sede_sd_cdgo where ev_estado=1', (err, resul) => {
-        let url_image='http://192.168.100.181:5000/evento/image/'
+        let url_image=url_servidor+'evento/image/'
 
         for(let i=0;i<resul.length;i++){
             

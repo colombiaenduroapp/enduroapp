@@ -7,14 +7,15 @@ const pool = require('../config/conection');
 const  fs = require("fs");
 const sede = {}
 var path = require('path');
+const url_servidor='https://colombiaenduro.herokuapp.com/'
 const url_carpeta_logo='images_sedes/';
 const url_carpeta_jersey='images_jersey_sedes/';
 const { json } = require('express');
 
 sede.getSede = async(req,res) => {
     pool.query('SELECT sd_cdgo,sd_desc,sd_logo,sd_jersey from sede where sd_estado=1', (err, resul) => {
-        var url_image='http://192.168.100.181:5000/sede/image/'
-        var url_imageJersey='http://192.168.100.181:5000/sede/imagejersey/'
+        var url_image=url_servidor+'sede/image/'
+        var url_imageJersey=url_servidor+'sede/imagejersey/'
         for(let i=0;i<resul.length;i++){
             
             let sd_logo=resul[i]['sd_logo'];
