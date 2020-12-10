@@ -1,7 +1,7 @@
 
 const pool = require('../config/conection');
 
-
+const url_servidor='https://colombiaenduro.herokuapp.com/'
 const ciudad = {}
 ciudad.getCiudad = async(req, res) => {
     

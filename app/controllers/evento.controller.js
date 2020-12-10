@@ -1,7 +1,10 @@
 const pool = require('../config/conection');
 const  fs = require("fs");
+// const url_servidor='http://192.168.100.181:5000/'
 const evento = {}
-var path = require('path');
+
+var path = require('path')
+// const url_servidor='http://192.168.100.181:5000/'
 const url_servidor='https://colombiaenduro.herokuapp.com/'
 const { json } = require('express');
 

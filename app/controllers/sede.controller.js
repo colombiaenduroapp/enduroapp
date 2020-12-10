@@ -7,6 +7,8 @@ const pool = require('../config/conection');
 const  fs = require("fs");
 const sede = {}
 var path = require('path');
+
+// var url_servidor='http://192.168.100.181:5000/'
 const url_servidor='https://colombiaenduro.herokuapp.com/'
 const url_carpeta_logo='images_sedes/';
 const url_carpeta_jersey='images_jersey_sedes/';
