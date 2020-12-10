@@ -98,8 +98,8 @@ sede.searchSede= async(req,res)=> {
       if(sede.length!=0){
 
         for(let i=0;i<sede.length;i++){
-            let url_image='http://192.168.100.181:5000/sede/image/'
-            let url_imageJersey='http://192.168.100.181:5000/sede/imagejersey/'
+            let url_image=url_servidor+'sede/image/'
+            let url_imageJersey=url_servidor+'sede/imagejersey/'
              let sd_logo=sede[i]['sd_logo'];
             let sd_jersey=sede[i]['sd_jersey'];
             
