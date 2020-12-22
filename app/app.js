@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended: false, limit: (52428800) }))
 app.use(require('./routes/ciudad.route'));
 app.use(require('./routes/evento.route'));
 app.use(require('./routes/sede.route'));
+app.use(require('./routes/empresa.route'));
 // // //--------routes sede
 // app.use(require('./routes/sede.route'));
 // //--------routes empresa

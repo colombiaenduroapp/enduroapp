@@ -7,9 +7,9 @@ const pool = require('../config/conection');
 const  fs = require("fs");
 const sede = {}
 var path = require('path');
-
-// var url_servidor='http://192.168.100.181:5000/'
-const url_servidor='https://colombiaenduro.herokuapp.com/'
+// direccion del servidor
+const url_servidor=require('./url_services')
+//fin direccion servidor -------------------------
 const url_carpeta_logo='images_sedes/';
 const url_carpeta_jersey='images_jersey_sedes/';
 const { json } = require('express');
@@ -19,6 +19,7 @@ sede.getSede = async(req,res) => {
         var url_image=url_servidor+'sede/image/'
         var url_imageJersey=url_servidor+'sede/imagejersey/'
         for(let i=0;i<resul.length;i++){
+            
             
             let sd_logo=resul[i]['sd_logo'];
             let sd_jersey=resul[i]['sd_jersey'];
