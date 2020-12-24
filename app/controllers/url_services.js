@@ -1,6 +1,5 @@
-var prueba = function () {
-    return 'http://192.168.100.181:5000/';
-  };
+var ip = require("ip");
+
   
-  module.exports =  'http://192.168.100.181:5000/' ;
+  module.exports =  'http://'+ip.address()+':5000/' ;
     
