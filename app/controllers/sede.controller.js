@@ -10,8 +10,8 @@ var path = require('path');
 // direccion del servidor
 const url_servidor=require('./url_services')
 //fin direccion servidor -------------------------
-const url_carpeta_logo='images_sedes/';
-const url_carpeta_jersey='images_jersey_sedes/';
+const url_carpeta_logo='../public/images_sedes/';
+const url_carpeta_jersey='../public/images_jersey_sedes/';
 const { json } = require('express');
 
 sede.getSede = async(req,res) => {
@@ -43,12 +43,12 @@ sede.getSede = async(req,res) => {
 sede.getImage= async(req, res) =>{
     var sd_image=req.params.sd_logo
 
-    res.sendFile(path.resolve(path.resolve('images_sedes/'+sd_image)))
+    res.sendFile(path.resolve(path.resolve('app/public/images_sedes/'+sd_image)))
 };
 sede.getImageJersey= async(req, res) =>{
     var sd_image=req.params.sd_logo
     
-    res.sendFile(path.resolve(path.resolve('images_jersey_sedes/'+sd_image)))
+    res.sendFile(path.resolve(path.resolve('app/public/images_jersey_sedes/'+sd_image)))
 };
 
 

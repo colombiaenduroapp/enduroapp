@@ -3,6 +3,7 @@ const fs = require("fs");
 const evento = {}
 var path = require('path')
 const url_servidor = require('./url_services')
+const url_carpeta_logo='../public/images_eventos/'
 
 evento.getEvento = async(req, res) => {
     pool.query(' SELECT ev_cdgo,ev_sede_sd_cdgo,ev_usuario_us_cdgo,DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") as ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") as ev_fecha_fin,ev_desc,ev_lugar,ev_img,us_nombres,sd_desc,datediff(ev_fecha_inicio,now())as ev_faltante, ev_url_video from evento join usuario on ev_usuario_us_cdgo=us_cdgo join sede on sd_cdgo=us_sede_sd_cdgo where ev_estado=1', (err, resul) => {
@@ -28,7 +29,7 @@ evento.getEvento = async(req, res) => {
 evento.getImage = async(req, res) => {
     var ev_img = req.params.ev_img
 
-    res.sendFile(path.resolve(path.resolve('images_eventos/' + ev_img)))
+    res.sendFile(path.resolve(path.resolve('app/public/'+url_carpeta_logo + ev_img)))
 };
 
 evento.addEvento = async(req, res) => {
@@ -40,8 +41,6 @@ evento.addEvento = async(req, res) => {
     let ev_lugar = req.body.ev_lugar;
     let ev_img = req.body.ev_img;
     let ev_url_video = req.body.ev_url_video;
-    console.log(ev_desc);
-    let url_carpeta_logo = 'images_eventos/';
     let nombre_imagen_logo = guardarImagen(ev_desc, ev_img, url_carpeta_logo);
     const datos = {
         ev_sede_sd_cdgo: us_sede_sd_cdgo,
@@ -69,7 +68,6 @@ evento.addEvento = async(req, res) => {
 
 evento.updateEvento = async(req, res) => {
     const ev_cdgo = req.params.ev_cdgo
-    const url_carpeta_logo = 'images_eventos/'
     let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
     let us_cdgo = req.body.us_cdgo;
     let ev_desc = req.body.ev_desc;
