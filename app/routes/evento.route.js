@@ -1,5 +1,4 @@
 const router = require('express').Router();
-
 const evento = require('../controllers/evento.controller');
 
 
@@ -11,4 +10,7 @@ router.post('/:ev_cdgo', evento.updateEvento)
 
 
 
-module.exports=router
+
+
+
+module.exports = router
