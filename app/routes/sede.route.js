@@ -1,17 +1,13 @@
-
-const route = require('express').Router();
-
+const router = require('express').Router();
 const sede = require('../controllers/sede.controller');
 
-route.route('/sede').get(sede.getSede)
-route.route('/sede/image/:sd_logo').get(sede.getImage)
-route.route('/sede/imagejersey/:sd_logo').get(sede.getImageJersey)
-route.route('/sede/:sd_cdgo').get(sede.searchSede)
-route.route('/sede/mesa/:sd_cdgo').get(sede.getMesaSede)
-route.route('/sede').post(sede.addSede)
-route.route('/sede/:sd_cdgo').post(sede.updateSede)
+router.get('/', sede.getSede)
+router.get('/:sd_cdgo', sede.searchSede)
+router.get('/image/:sd_logo', sede.getImage)
+router.get('/imagejersey/:sd_logo', sede.getImageJersey)
+router.get('/mesa/:sd_cdgo', sede.getMesaSede)
+router.post('/', sede.addSede)
+router.post('/:sd_cdgo', sede.updateSede)
 
 
-
-
-module.exports=route
+module.exports = router
