@@ -1,6 +1,4 @@
-
 const router = require('express').Router();
-
 const empresa = require('../controllers/empresa.controller');
 
 
@@ -12,4 +10,4 @@ router.post('/', empresa.addEmpresa)
 
 
 
-module.exports=router
+module.exports = router
