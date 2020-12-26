@@ -1,29 +1,29 @@
 const express = require('express')
 const app = express()
+const http = require('http').createServer(app)
+const port = process.env.PORT || 5000
+const ip = require("ip");
+const host = ip.address()
+const morgan = require('morgan')
+const cors = require('cors')
 
 
 
 
-
-
-app.use(express.urlencoded({extended: false, limit: (52428800) }))
-
-
+app.use(express.urlencoded({ extended: false, limit: (52428800) }))
+app.use(morgan('dev'))
+app.use(cors())
 
 
 //routes
-
-
-//--------routes ciudad
-app.use(require('./routes/ciudad.route'));
-app.use(require('./routes/evento.route'));
-app.use(require('./routes/sede.route'));
-app.use(require('./routes/empresa.route'));
-// // //--------routes sede
-// app.use(require('./routes/sede.route'));
-// //--------routes empresa
-// app.use(require('./routes/empresa.route'));
+app.use('/', require('./routes/index.route'))
 
 
 
-module.exports=app
+http.listen(port, host, (error) => {
+    if (error) {
+        console.log(`An error has occurred: ${error}`)
+    } else {
+        console.log(`Server is running on http://${host}:${port}`)
+    }
+});
