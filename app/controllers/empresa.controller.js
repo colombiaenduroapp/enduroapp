@@ -35,9 +35,9 @@ empresa.getEmpresa = async(req, res) => {
 }
 
 empresa.getImage = async(req, res) => {
-    var ev_img = req.params.ev_img
+    var em_img = req.params.em_img
 
-    res.sendFile(path.resolve(path.resolve(url_carpeta_logo + ev_img)))
+    res.sendFile(path.resolve(path.resolve(url_carpeta_logo + em_img)))
 };
 
 empresa.addEmpresa = async(req, res) => {
