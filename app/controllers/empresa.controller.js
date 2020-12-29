@@ -4,7 +4,8 @@ const empresa = {}
 
 var path = require('path')
 const url_servidor = require('./url_services')
-const url_carpeta_logo = '../public/images_empresas/';
+const url_carpeta_logo = 'app/public/images_empresas/';
+
 const { json } = require('express');
 const prueba = require('./url_services');
 
@@ -22,6 +23,8 @@ empresa.getEmpresa = async(req, res) => {
             if (ev_img != null) {
 
                 resul[i]['em_logo'] = url_image + ev_img
+            }else{
+                resul[i]['em_logo'] =null
             }
 
         }
@@ -37,7 +40,7 @@ empresa.getEmpresa = async(req, res) => {
 empresa.getImage = async(req, res) => {
     var em_img = req.params.em_img
 
-    res.sendFile(path.resolve(path.resolve('app/public/'+url_carpeta_logo + em_img)))
+    res.sendFile(path.resolve(path.resolve(url_carpeta_logo+ em_img)))
 };
 
 empresa.addEmpresa = async(req, res) => {
@@ -165,11 +168,14 @@ empresa.searchEmpresa = async(req, res) => {
         for (let i = 0; i < empresa.length; i++) {
 
             let ev_img = empresa[i]['em_logo'];
-
+            if (ev_img != null) {
 
             empresa[i]['em_logo'] = url_image + ev_img
+            }
 
         }
+
+        
 
         let data = {
             em_cdgo: empresa[0].em_cdgo,
