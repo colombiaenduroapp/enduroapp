@@ -1,46 +1,40 @@
 const pool = require('../config/conection');
 const fs = require("fs");
 const empresa = {}
-
 var path = require('path')
 const url_servidor = require('./url_services')
-const url_carpeta_logo = 'app/public/images_empresas/';
+const url_carpeta_logo = '../public/images_empresas/';
 
-const { json } = require('express');
-const prueba = require('./url_services');
-
-
-// replace(/T/, ' ').replace(/\..+/, '')
-
-
-empresa.getEmpresa = async(req, res) => {
-    pool.query(' SELECT em_cdgo,em_nit,em_logo,em_nombre,em_desc,em_telefono,em_correo,em_estado from empresa', (err, resul) => {
-        let url_image = url_servidor + 'empresa/image/'
-
-        for (let i = 0; i < resul.length; i++) {
-
-            let ev_img = resul[i]['em_logo'];
-            if (ev_img != null) {
-
-                resul[i]['em_logo'] = url_image + ev_img
-            }else{
-                resul[i]['em_logo'] =null
-            }
-
+empresa.getEmpresa = async (req, res) => {
+    try {
+        const resultEmpresa = await pool.query(' SELECT em_cdgo,em_nit,em_logo,em_nombre,em_desc,em_telefono,em_correo,em_estado from empresa')
+        const url_image = url_servidor + 'empresa/image/'
+        for (let i = 0; i < resultEmpresa.length; i++) {
+            const ev_img = resultEmpresa[i]['em_logo'];
+            if (ev_img != null) resultEmpresa[i]['em_logo'] = url_image + ev_img
         }
-        if (err) throw err;
-
-        else if (resul.length != 0) res.json({ status: true, data: resul })
-        else res.json({ status: false });
-    })
-
-
+        if (resultEmpresa.length != 0) res.json({ status: true, data: resultEmpresa })
+        else res.json({ status: false });        
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
 }
 
 empresa.getImage = async(req, res) => {
-    var em_img = req.params.em_img
-
-    res.sendFile(path.resolve(path.resolve(url_carpeta_logo+ em_img)))
+    try {
+        var em_img = req.params.em_img
+        fs.statSync(path.resolve('app/public/'+url_carpeta_logo + em_img));
+        res.sendFile(path.resolve('app/public/'+url_carpeta_logo + em_img))
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+        })
+    }
 };
 
 empresa.addEmpresa = async(req, res) => {
