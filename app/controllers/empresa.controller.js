@@ -2,7 +2,7 @@ const pool = require('../config/conection');
 const fs = require("fs");
 const empresa = {}
 var path = require('path')
-const url_servidor = require('./url_services')
+const url_servidor = require('./url_services');
 const url_carpeta_logo = '../public/images_empresas/';
 
 empresa.getEmpresa = async (req, res) => {
@@ -26,7 +26,8 @@ empresa.getEmpresa = async (req, res) => {
 
 empresa.getImage = async(req, res) => {
     try {
-        var em_img = req.params.em_img
+        const { em_img } = req.params
+        console.log(em_img);
         fs.statSync(path.resolve('app/public/'+url_carpeta_logo + em_img));
         res.sendFile(path.resolve('app/public/'+url_carpeta_logo + em_img))
     } catch (error) {
@@ -38,36 +39,26 @@ empresa.getImage = async(req, res) => {
 };
 
 empresa.addEmpresa = async(req, res) => {
-    let em_nit = req.body.em_nit
-    let em_logo = req.body.em_logo;
-    let em_nombre = req.body.em_nombre;
-    let em_desc = req.body.em_desc;
-    let em_telefono = req.body.em_telefono;
-    let em_correo = req.body.em_correo;
-    let nombre_imagen_logo = '';
-    if (em_logo != null) {
-        nombre_imagen_logo = guardarImagen(em_nombre, em_logo, url_carpeta_logo);
-    }
-    const datos = {
-        em_nit: em_nit,
-        em_logo: nombre_imagen_logo,
-        em_nombre: em_nombre,
-        em_desc: em_desc,
-        em_telefono: em_telefono,
-        em_correo: em_correo,
-
-    }
-
-    await pool.query('insert into empresa set ?', datos, (err, resul) => {
-        if (err) {
-
-            fs.unlinkSync(url_carpeta_logo + nombre_imagen_logo);
-            console.log(err);
-            return err
-        } else {
-            return res.json({ status: true });
+    try {
+        const { em_nit, em_logo, em_nombre, em_desc, em_telefono, em_correo } = req.body
+        const datos = {
+            em_nit: em_nit,
+            em_logo: (em_logo!='') ? await guardarImagen(em_nombre, em_logo, url_carpeta_logo): null,
+            em_nombre: em_nombre,
+            em_desc: em_desc,
+            em_telefono: em_telefono,
+            em_correo: em_correo,
         }
-    })
+        await pool.query('INSERT INTO empresa SET ?', datos,)
+        res.json({ status: true });
+    } catch (error) {
+        fs.unlinkSync(url_carpeta_logo + nombre_imagen_logo);
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })  
+    }
 }
 
 // evento.updateEvento=async(req,res)=>{
@@ -193,7 +184,7 @@ empresa.searchEmpresa = async(req, res) => {
 
 
 
-function guardarImagen(sd_desc, sd_imagen, url) {
+guardarImagen = (sd_desc, sd_imagen, url) => {
     let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
     let date = new Date();
     let ruta_imagen = url; //carpeta donde se guardara la logo
