@@ -10,8 +10,10 @@ var path = require('path');
 // direccion del servidor
 const url_servidor=require('./url_services')
 //fin direccion servidor -------------------------
-const url_carpeta_logo='../public/images_sedes/';
-const url_carpeta_jersey='../public/images_jersey_sedes/';
+const url_carpeta_logo='app/public/images_sedes/';
+const url_ver_carpeta_logo='../public/images_sedes/';
+const url_carpeta_jersey='app/public/images_jersey_sedes/';
+const url_ver_carpeta_jersey='../public/images_jersey_sedes/';
 const { json } = require('express');
 
 sede.getSede = async(req,res) => {

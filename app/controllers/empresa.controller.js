@@ -153,11 +153,14 @@ empresa.searchEmpresa = async(req, res) => {
         for (let i = 0; i < empresa.length; i++) {
 
             let ev_img = empresa[i]['em_logo'];
-
+            if (ev_img != null) {
 
             empresa[i]['em_logo'] = url_image + ev_img
+            }
 
         }
+
+        
 
         let data = {
             em_cdgo: empresa[0].em_cdgo,
