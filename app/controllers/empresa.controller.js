@@ -3,7 +3,7 @@ const fs = require("fs");
 const empresa = {}
 var path = require('path')
 const url_servidor = require('./url_services')
-const url_carpeta_logo = '../public/images_empresas/';
+const url_carpeta_logo = 'app/public/images_empresas/';
 
 empresa.getEmpresa = async (req, res) => {
     try {
@@ -27,8 +27,8 @@ empresa.getEmpresa = async (req, res) => {
 empresa.getImage = async(req, res) => {
     try {
         var em_img = req.params.em_img
-        fs.statSync(path.resolve('app/public/'+url_carpeta_logo + em_img));
-        res.sendFile(path.resolve('app/public/'+url_carpeta_logo + em_img))
+        fs.statSync(path.resolve(url_carpeta_logo + em_img));
+        res.sendFile(path.resolve(url_carpeta_logo + em_img))
     } catch (error) {
         res.json({
             status: false,
