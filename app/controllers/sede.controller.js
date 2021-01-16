@@ -8,11 +8,11 @@ const url_carpeta_jersey='app/public/images_jersey_sedes/';
 
 sedes.getSedes = async(req, res) => {
     try {
-        const resultSedes = await pool.query('SELECT sd_cdgo AS id, sd_desc AS nombre, sd_logo AS url_logo,sd_jersey AS url_jersey FROM sede WHERE sd_estado=1')
+        const resultSedes = await pool.query('SELECT sd_cdgo, sd_desc, sd_logo, sd_jersey FROM sede WHERE sd_estado=1')
         if (resultSedes != 0) {            
             for (let i = 0; i < resultSedes.length; i++) {
-                if (resultSedes[i].url_logo) resultSedes[i].url_logo = url_servidor+'sede/image/'+resultSedes[i].url_logo
-                if (resultSedes[i].url_jersey) resultSedes[i].url_jersey = url_servidor+'sede/imagejersey/'+resultSedes[i].url_jersey
+                if (resultSedes[i].sd_logo) resultSedes[i].sd_logo = url_servidor+'sede/image/'+resultSedes[i].sd_logo
+                if (resultSedes[i].sd_jersey) resultSedes[i].sd_jersey = url_servidor+'sede/imagejersey/'+resultSedes[i].sd_jersey
             }
             res.json({ status: true, data: resultSedes })           
         } else res.json({ status: false });
@@ -53,14 +53,14 @@ sedes.getImageJersey= async(req, res) =>{
 
 sedes.addSede= async(req, res)=>{
     try {
-        const { nombre, logo, jersey, id_ciudad } = req.body
-        const nombre_imagen_logo = (logo) ? await guardarImagen(nombre, logo, url_carpeta_logo) : null;
-        const nombre_imagen_jersey = (jersey) ? await guardarImagen(nombre, jersey, url_carpeta_jersey) : null;
+        const { sd_desc, sd_logo, sd_jersey, sd_ciudad_cd_cdgo } = req.body
+        const nombre_imagen_logo = (sd_logo) ? await guardarImagen(sd_desc, sd_logo, url_carpeta_logo) : null;
+        const nombre_imagen_jersey = (sd_jersey) ? await guardarImagen(sd_desc, sd_jersey, url_carpeta_jersey) : null;
         const datos={
-            sd_desc: nombre,
+            sd_desc: sd_desc,
             sd_logo: nombre_imagen_logo,
             sd_jersey: nombre_imagen_jersey,
-            sd_ciudad_cd_cdgo: id_ciudad
+            sd_ciudad_cd_cdgo: sd_ciudad_cd_cdgo
         }
         await pool.query('INSERT INTO sede SET ?', datos)
         res.json({ status: true});
