@@ -52,7 +52,6 @@ sedes.getImageJersey= async(req, res) =>{
 };
 
 sedes.addSede= async(req, res)=>{
-    console.log(req.body);
     try {
         const { nombre, logo, jersey, id_ciudad } = req.body
         const nombre_imagen_logo = (logo) ? await guardarImagen(nombre, logo, url_carpeta_logo) : null;
