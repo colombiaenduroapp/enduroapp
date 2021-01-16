@@ -7,7 +7,7 @@ const url_carpeta_logo = 'app/public/images_empresas/';
 
 empresa.getEmpresa = async (req, res) => {
     try {
-        const resultEmpresa = await pool.query(' SELECT em_cdgo,em_nit,em_logo,em_nombre,em_desc,em_telefono,em_correo,em_estado from empresa')
+        const resultEmpresa = await pool.query(' SELECT em_cdgo,em_nit,em_logo,em_nombre,em_desc,em_telefono,em_correo,em_estado from empresa WHERE em_estado=1')
         const url_image = url_servidor + 'empresa/image/'
         for (let i = 0; i < resultEmpresa.length; i++) {
             const ev_img = resultEmpresa[i]['em_logo'];
@@ -202,5 +202,17 @@ guardarImagen = (sd_desc, sd_imagen, url) => {
     return nombre_imagen;
 };
 
+empresa.deleteEmpresa = async (req, res) => {
+    try {
+        await pool.query('UPDATE empresa SET ? WHERE em_cdgo=?', [{em_estado: 0}, req.params.em_cdgo])
+        res.json({ status: true })
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
+}
 
 module.exports = empresa;
