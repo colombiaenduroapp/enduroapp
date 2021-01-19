@@ -1,7 +1,7 @@
 const pool = require('../config/conection');
 const  fs = require("fs");
 const sedes = {}
-var path = require('path');
+const path = require('path');
 const url_servidor=require('./url_services')
 const url_carpeta_logo='app/public/images_sedes/';
 const url_carpeta_jersey='app/public/images_jersey_sedes/';
@@ -9,7 +9,7 @@ const url_carpeta_jersey='app/public/images_jersey_sedes/';
 sedes.getSedes = async(req, res) => {
     try {
         const resultSedes = await pool.query('SELECT sd_cdgo, sd_desc, sd_logo, sd_jersey FROM sede WHERE sd_estado=1 ORDER BY sd_cdgo DESC')
-        if (resultSedes != 0) {            
+        if (resultSedes.length != 0) {            
             for (let i = 0; i < resultSedes.length; i++) {
                 if (resultSedes[i].sd_logo) resultSedes[i].sd_logo = url_servidor+'sede/image/'+resultSedes[i].sd_logo
                 if (resultSedes[i].sd_jersey) resultSedes[i].sd_jersey = url_servidor+'sede/imagejersey/'+resultSedes[i].sd_jersey

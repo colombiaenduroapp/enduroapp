@@ -1,13 +1,11 @@
 const router = require('express').Router();
-const empresa = require('../controllers/empresa.controller');
+const empresas = require('../controllers/empresa.controller');
 
-
-router.get('/', empresa.getEmpresa)
-router.get('/image/:em_img', empresa.getImage)
-router.get('/:em_cdgo', empresa.searchEmpresa)
-router.post('/', empresa.addEmpresa)
-router.delete('/:em_cdgo', empresa.deleteEmpresa)
-
-
+router.get('/', empresas.getEmpresas)
+router.get('/image/:em_img', empresas.getImage)
+router.get('/:em_cdgo', empresas.searchEmpresa)
+router.post('/', empresas.addEmpresa)
+router.put('/:em_cdgo', empresas.updateEmpresa)
+router.delete('/:em_cdgo', empresas.deleteEmpresa)
 
 module.exports = router
