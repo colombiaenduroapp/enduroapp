@@ -6,67 +6,61 @@ const url_servidor = require('./url_services')
 const url_carpeta_logo='app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
-    pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc,ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 AND DATEDIFF(ev_fecha_inicio,now())>=0', (err, resul) => {
-        let url_image = url_servidor + 'evento/image/'
-
-        for (let i = 0; i < resul.length; i++) {
-
-            let ev_img = resul[i]['ev_img'];
-
-
-            resul[i]['ev_img'] = url_image + ev_img
-
-        }
-        if (err) throw err;
-
-        else if (resul.length != 0) res.json({ status: true, data: resul })
-        else res.json({ status: false });
-    })
-
-
+    try {
+        const resultEventos = await pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc, ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 AND DATEDIFF(ev_fecha_inicio,now())>=0')
+        if (resultEventos.length != 0) {
+            for (let i = 0; i < resultEventos.length; i++) {
+                if (resultEventos[i].ev_img) resultEventos[i].ev_img = url_servidor+'evento/image/'+resultEventos[i].ev_img
+            }
+            res.json({ status: true, data: resultEventos })
+        } else  res.json({ status: false });
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
 }
 
 eventos.getImage = async(req, res) => {
-    var ev_img = req.params.ev_img
-
-    res.sendFile(path.resolve(path.resolve(url_carpeta_logo + ev_img)))
+    try {
+        const { ev_img } = req.params
+        fs.statSync(path.resolve(url_carpeta_logo + ev_img));
+        res.sendFile(path.resolve(url_carpeta_logo + ev_img))
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+        })
+    }
 };
 
-/* evento.addEvento = async(req, res) => {
-    let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
-    let us_cdgo = req.body.us_cdgo;
-    let ev_desc = req.body.ev_desc;
-    let ev_fecha_inicio = req.body.ev_fecha_inicio;
-    let ev_fecha_fin = req.body.ev_fecha_fin;
-    let ev_lugar = req.body.ev_lugar;
-    let ev_img = req.body.ev_img;
-    let ev_url_video = req.body.ev_url_video;
-    let nombre_imagen_logo = guardarImagen(ev_desc, ev_img, url_carpeta_logo);
-    const datos = {
-        ev_sede_sd_cdgo: us_sede_sd_cdgo,
-        ev_usuario_us_cdgo: us_cdgo,
-        ev_desc: ev_desc,
-        ev_fecha_inicio: ev_fecha_inicio,
-        ev_fecha_fin: ev_fecha_fin,
-        ev_lugar: ev_lugar,
-        ev_img: nombre_imagen_logo,
-        ev_url_video: ev_url_video
-
-    }
-
-    await pool.query('insert into evento set ?', datos, (err, resul) => {
-        if (err) {
-
-            fs.unlinkSync(url_carpeta_logo + nombre_imagen_logo);
-            console.log(err);
-            return err
-        } else {
-            return res.json({ status: true });
+eventos.addEvento = async(req, res) => {
+    try {
+        const { us_sede_sd_cdgo, us_cdgo, ev_desc, ev_fecha_inicio, ev_fecha_fin, ev_lugar, ev_img, ev_url_video, } = req.body
+        const datos = {
+            ev_sede_sd_cdgo: us_sede_sd_cdgo,
+            ev_usuario_us_cdgo: us_cdgo,
+            ev_desc: ev_desc,
+            ev_fecha_inicio: ev_fecha_inicio,
+            ev_fecha_fin: ev_fecha_fin,
+            ev_lugar: ev_lugar,
+            ev_img: await guardarImagen(ev_desc, ev_img, url_carpeta_logo),
+            ev_url_video: ev_url_video
         }
-    })
+        await pool.query('insert into evento set ?', datos)
+        res.json({ status: true });
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
 }
 
-evento.updateEvento = async(req, res) => {
+/* evento.updateEvento = async(req, res) => {
     const ev_cdgo = req.params.ev_cdgo
     let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
     let us_cdgo = req.body.us_cdgo;

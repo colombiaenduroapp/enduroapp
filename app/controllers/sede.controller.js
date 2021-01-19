@@ -27,7 +27,7 @@ sedes.getSedes = async(req, res) => {
 
 sedes.getImage= async(req, res) =>{
     try {
-        let sd_image = req.params.sd_logo
+        const sd_image = req.params.sd_logo
         fs.statSync(path.resolve(url_carpeta_logo + sd_image));
         res.sendFile(path.resolve(url_carpeta_logo + sd_image))
     } catch (error) {
