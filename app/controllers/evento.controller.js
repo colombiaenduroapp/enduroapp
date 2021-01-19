@@ -179,8 +179,8 @@ evento.searchEvento = async(req, res) => {
 
 
 }
-
-function guardarImagen(sd_desc, sd_imagen, url) {
+*/
+const guardarImagen = async(sd_desc, sd_imagen, url) => {
     let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
     let date = new Date();
     let ruta_imagen = url; //carpeta donde se guardara la logo
@@ -192,8 +192,7 @@ function guardarImagen(sd_desc, sd_imagen, url) {
         if (err)
             console.log(err);
     });
-
     return nombre_imagen;
 };
- */
+ 
 module.exports = eventos;
