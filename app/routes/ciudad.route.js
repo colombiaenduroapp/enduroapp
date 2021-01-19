@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const ciudad = require('../controllers/ciudad.controller')
 
-
 router.get('/', ciudad.getCiudad)
-router.post('/', ciudad.addCiudad)
-
+//router.post('/', ciudad.addCiudad)s
 
 module.exports = router

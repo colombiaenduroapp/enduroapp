@@ -1,5 +1,3 @@
-var ip = require("ip");
+const ip = require("ip");
 
-  
-  module.exports =  'http://'+ip.address()+':5000/' ;
-    
+module.exports =  'http://'+ip.address()+':5000/';

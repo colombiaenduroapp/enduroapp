@@ -15,7 +15,7 @@ ciudad.getCiudad = async(req, res) => {
     }
 }  
 
-ciudad.addCiudad= async(req,res)=> {
+/* ciudad.addCiudad= async(req,res)=> {
     const {cd_desc,cd_cdgo}=req.body
     const datos={
         cd_cdgo:cd_cdgo,
@@ -27,31 +27,6 @@ ciudad.addCiudad= async(req,res)=> {
         if (err) throw err;
         res.json({ status: true });
     });
-}
-
-
-// async function editCiudad(req,res) {
-//     const {cd_cdgo}=req.params
-//     const {cd_desc}=req.body
-//     try{
-//         let sql=`UPDATE ciudad SET cd_desc=${connection.escape(cd_desc)} WHERE cd_cdgo=${connection.escape(cd_cdgo)}`
-//         const rows= await query(sql)
-//         res.json({message:`Actualizado correctamente!`})
-//     }catch(exception){
-//         res.json({message:`Ha ocurrido un error en la peticion: ${exception} `})
-//     }
-// }
-
-// async function deleteCiudad(req,res) {
-//     const {cd_cdgo}=req.params
-//     try{
-//         let sql=`UPDATE ciudad SET cd_estado="false" WHERE cd_cdgo=${connection.escape(cd_cdgo)}`
-//         const rows= await query(sql)
-//         res.json({message:`Eliminado correctamente!`})
-//     }catch(exception){
-//         res.json({message:`Ha ocurrido un error en la peticion: ${exception} `})
-//     }
-// }
-
+} */
 
 module.exports = ciudad

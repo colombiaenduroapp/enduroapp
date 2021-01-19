@@ -1,12 +1,12 @@
 const pool = require('../config/conection');
 const fs = require("fs");
-const evento = {}
-var path = require('path')
+const eventos = {}
+const path = require('path')
 const url_servidor = require('./url_services')
 const url_carpeta_logo='app/public/images_eventos/'
 
-evento.getEvento = async(req, res) => {
-    pool.query(' SELECT ev_cdgo,ev_sede_sd_cdgo,ev_usuario_us_cdgo,DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") as ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") as ev_fecha_fin,ev_desc,ev_lugar,ev_img,us_nombres,sd_desc,datediff(ev_fecha_inicio,now())as ev_faltante, ev_url_video from evento join usuario on ev_usuario_us_cdgo=us_cdgo join sede on sd_cdgo=us_sede_sd_cdgo where ev_estado=1', (err, resul) => {
+eventos.getEventos = async(req, res) => {
+    pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc,ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 AND DATEDIFF(ev_fecha_inicio,now())>=0', (err, resul) => {
         let url_image = url_servidor + 'evento/image/'
 
         for (let i = 0; i < resul.length; i++) {
@@ -26,13 +26,13 @@ evento.getEvento = async(req, res) => {
 
 }
 
-evento.getImage = async(req, res) => {
+eventos.getImage = async(req, res) => {
     var ev_img = req.params.ev_img
 
     res.sendFile(path.resolve(path.resolve(url_carpeta_logo + ev_img)))
 };
 
-evento.addEvento = async(req, res) => {
+/* evento.addEvento = async(req, res) => {
     let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
     let us_cdgo = req.body.us_cdgo;
     let ev_desc = req.body.ev_desc;
@@ -146,7 +146,6 @@ evento.updateEvento = async(req, res) => {
 
 }
 
-
 evento.searchEvento = async(req, res) => {
     let ev_cdgo = req.params.ev_cdgo
     try {
@@ -187,9 +186,6 @@ evento.searchEvento = async(req, res) => {
 
 }
 
-
-
-
 function guardarImagen(sd_desc, sd_imagen, url) {
     let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
     let date = new Date();
@@ -205,6 +201,5 @@ function guardarImagen(sd_desc, sd_imagen, url) {
 
     return nombre_imagen;
 };
-
-
-module.exports = evento;
+ */
+module.exports = eventos;
