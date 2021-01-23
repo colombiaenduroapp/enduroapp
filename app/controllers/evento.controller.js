@@ -7,7 +7,7 @@ const url_carpeta_logo='app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
     try {
-        const resultEventos = await pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc, ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 ')
+        const resultEventos = await pool.query('SELECT ev_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc, ev_img, sd_desc, IF(DATEDIFF(ev_fecha_inicio,now())>0,1,IF(DATEDIFF(ev_fecha_fin,now())<0,2,0)) AS ev_estado_ev FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 ORDER BY ev_estado_ev ASC')
         if (resultEventos.length != 0) {
             for (let i = 0; i < resultEventos.length; i++) {
                 if (resultEventos[i].ev_img) resultEventos[i].ev_img = url_servidor+'evento/image/'+resultEventos[i].ev_img
@@ -60,130 +60,65 @@ eventos.addEvento = async(req, res) => {
     }
 }
 
-/* evento.updateEvento = async(req, res) => {
-    const ev_cdgo = req.params.ev_cdgo
-    let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
-    let us_cdgo = req.body.us_cdgo;
-    let ev_desc = req.body.ev_desc;
-    let ev_fecha_inicio = req.body.ev_fecha_inicio;
-    let ev_fecha_fin = req.body.ev_fecha_fin;
-    let ev_lugar = req.body.ev_lugar;
-    let ev_img = req.body.ev_img;
-    let ev_url_img = req.body.ev_url_img;
-    let ev_url_video = req.body.ev_url_video;
-    let datos_actualizar = {};
-
-
-    if (ev_img != '') {
-
-        datos_actualizar = {
-            ev_sede_sd_cdgo: us_sede_sd_cdgo,
-            ev_usuario_us_cdgo: us_cdgo,
-            ev_desc: ev_desc,
-            ev_fecha_inicio: ev_fecha_inicio,
-            ev_fecha_fin: ev_fecha_fin,
-            ev_lugar: ev_lugar,
-            ev_img: await guardarImagen(ev_desc, ev_img, url_carpeta_logo),
-            ev_url_video: ev_url_video,
-        }
-        await pool.query('update evento set ? where ev_cdgo=?', [datos_actualizar, ev_cdgo], (err, resul) => {
-            if (err) {
-                try {
-                    fs.unlinkSync(url_carpeta_logo + datos_actualizar.ev_img);
-                    console.log('File removed')
-                } catch (err) {
-                    console.error('Something wrong happened removing the file', err)
-                }
-
-                console.log(err);
-            } else {
-                try {
-                    fs.unlinkSync(url_carpeta_logo + ev_url_img);
-                    console.log('File removed')
-                } catch (err) {
-                    console.error('Something wrong happened removing the file', err)
-                }
-                res.json({ status: true });
-            }
-
-        }, )
-
-    } else {
-        datos_actualizar = {
-            ev_sede_sd_cdgo: us_sede_sd_cdgo,
-            ev_usuario_us_cdgo: us_cdgo,
-
-            ev_fecha_inicio: ev_fecha_inicio,
-            ev_fecha_fin: ev_fecha_fin,
-            ev_desc: ev_desc,
-            ev_lugar: ev_lugar,
-
-            // ev_url_video:ev_url_video,
-        }
-
-        await pool.query('update evento set ? where ev_cdgo=?', [datos_actualizar, ev_cdgo], (err, resul) => {
-            if (err) {
-                console.log(err);
-
-            } else {
-                console.log('success');
-                res.json({ status: true });
-            }
-
-        })
-
-
-    }
-
-
-    res.status(200).json({ status: true });
-
-}
-
-evento.searchEvento = async(req, res) => {
-    let ev_cdgo = req.params.ev_cdgo
+eventos.updateEvento = async(req, res) => {
     try {
-        const evento = await pool.query(' SELECT ev_cdgo,ev_sede_sd_cdgo,ev_usuario_us_cdgo,DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") as ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") as ev_fecha_fin,ev_desc,ev_lugar,ev_img,us_nombres,sd_desc,datediff(ev_fecha_inicio,now())as ev_faltante, ev_url_video from evento join usuario on ev_usuario_us_cdgo=us_cdgo join sede on sd_cdgo=us_sede_sd_cdgo where ev_cdgo=?', ev_cdgo)
-        let url_image = url_servidor + 'evento/image/'
+        let datos_actualizar = {};
+        const { ev_cdgo } = req.params
+        const { us_sede_sd_cdgo, us_cdgo, ev_desc, ev_fecha_inicio, ev_fecha_fin, ev_lugar, ev_img, ev_url_img, ev_url_video } = req.body
+        datos_actualizar.ev_sede_sd_cdgo =  us_sede_sd_cdgo
+        datos_actualizar.ev_usuario_us_cdgo =  us_cdgo
+        datos_actualizar.ev_desc = ev_desc
+        datos_actualizar.ev_fecha_inicio = ev_fecha_inicio
+        datos_actualizar.ev_fecha_fin = ev_fecha_fin
+        datos_actualizar.ev_lugar = ev_lugar
+        datos_actualizar.ev_url_video = ev_url_video
+        if (ev_img) datos_actualizar.ev_img = await guardarImagen(ev_desc, ev_img, url_carpeta_logo)
+        
+        const updateEvento = await pool.query('UPDATE evento SET ? WHERE ev_cdgo=?', [datos_actualizar, ev_cdgo])
 
-        for (let i = 0; i < evento.length; i++) {
-
-            let ev_img = evento[i]['ev_img'];
-
-
-            evento[i]['ev_img'] = url_image + ev_img
-
+        if (updateEvento.affectedRows) {
+            try {                
+                if (ev_img && ev_url_img) fs.unlinkSync(url_carpeta_logo+ev_url_img);
+            } catch (error) { }
+        } else {
+            try {                
+                if (ev_img) fs.unlinkSync(url_carpeta_logo+datos_actualizar.ev_img);
+            } catch (error) { }
+            res.json({ status: false, message: 'Action denied'});
         }
+        res.json({ status: true });
 
-        let data = {
-            ev_cdgo: evento[0].ev_cdgo,
-            ev_sede_sd_cdgo: evento[0].ev_sede_sd_cdgo,
-            ev_usuario_us_cdgo: evento[0].ev_usuario_us_cdgo,
-            ev_fecha_inicio: evento[0].ev_fecha_inicio,
-            ev_fecha_fin: evento[0].ev_fecha_fin,
-            ev_desc: evento[0].ev_desc,
-            ev_lugar: evento[0].ev_lugar,
-            ev_img: evento[0].ev_img,
-            us_nombres: evento[0].us_nombres,
-            ev_faltante: evento[0].ev_faltante,
-            ev_url_video: evento[0].ev_url_video
-        }
-
-
-        if (evento.length != 0) res.json({ status: true, data: data })
-        else res.json({ status: false });
-    } catch (err) {
-        return err;
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
     }
-
-
-
 }
-*/
-const guardarImagen = async(sd_desc, sd_imagen, url) => {
+
+eventos.searchEvento = async(req, res) => {
+    try {
+        const { ev_cdgo } = req.params
+        const resultEvento = await pool.query(' SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") as ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") as ev_fecha_fin, ev_desc, ev_lugar, ev_img, us_nombres, sd_desc, datediff(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video from evento join usuario on ev_usuario_us_cdgo=us_cdgo join sede on sd_cdgo=us_sede_sd_cdgo where ev_cdgo=? AND ev_estado=1 LIMIT 1', ev_cdgo)
+        
+        if (resultEvento.length != 0) {
+            if (resultEvento[0].ev_img) resultEvento[0].ev_img = url_servidor+'evento/image/'+resultEvento[0].ev_img
+            res.json({ status: true, data: resultEvento[0] })
+        } else res.json({ status: false })
+        
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
+}
+
+const guardarImagen = async(sd_desc, sd_imagen, ruta_imagen) => {
     let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
     let date = new Date();
-    let ruta_imagen = url; //carpeta donde se guardara la logo
     let nombre_imagen = date.getTime() + '_' + nombre_sin_espacio + '.png' // nombre de la logo, consta de un datatime y el nombre de la sede 
     let data = sd_imagen.replace(/^data:image\/\w+;base64,/, ''); // remueve valores innecesarios del data base64
     let realFile = Buffer.from(data, "base64"); // decodifica el base64 a una imagen
