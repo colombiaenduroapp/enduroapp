@@ -3,8 +3,9 @@ const eventos = require('../controllers/evento.controller');
 
 router.get('/', eventos.getEventos)
 router.get('/image/:ev_img', eventos.getImage)
-router.post('/', eventos.addEvento)
 router.get('/:ev_cdgo', eventos.searchEvento)
-/*router.post('/:ev_cdgo', evento.updateEvento) */
+router.post('/', eventos.addEvento)
+router.put('/:ev_cdgo', eventos.updateEvento) 
+router.delete('/:em_cdgo', eventos.deleteEvento)
 
 module.exports = router
