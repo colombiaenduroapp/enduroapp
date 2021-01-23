@@ -8,7 +8,7 @@ const url_carpeta_logo = 'app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
     try {
-        const resultEventos = await pool.query('SELECT ev_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc, ev_img, sd_desc, IF(DATEDIFF(ev_fecha_inicio,now())>0,1,IF(DATEDIFF(ev_fecha_fin,now())<0,2,0)) AS ev_estado_ev, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 ORDER BY ev_estado_ev ASC')
+        const resultEventos = await pool.query('SELECT ev_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc, ev_img, sd_desc, IF(DATEDIFF(ev_fecha_inicio,now())>0,1,IF(DATEDIFF(ev_fecha_fin,now())<0,2,0)) AS ev_estado_ev, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 ORDER BY ev_estado_ev ASC')
         if (resultEventos.length != 0) {
             for (let i = 0; i < resultEventos.length; i++) {
                 if (resultEventos[i].ev_img) resultEventos[i].ev_img = url_servidor+'evento/image/'+resultEventos[i].ev_img
