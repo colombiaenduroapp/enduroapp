@@ -2,9 +2,9 @@ const pool = require('../config/conection');
 const fs = require("fs");
 const eventos = {}
 const path = require('path')
-const url_servidor = require('./url_services')
+const url_servidor = require('../config/url_services')
 const { utilImage } = require('../utils/util')
-const url_carpeta_logo='app/public/images_eventos/'
+const url_carpeta_logo = 'app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
     try {

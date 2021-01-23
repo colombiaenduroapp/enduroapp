@@ -2,7 +2,7 @@ const pool = require('../config/conection');
 const fs = require("fs");
 const empresas = {}
 const path = require('path')
-const url_servidor = require('./url_services')
+const url_servidor = require('../config/url_services')
 const { utilImage } = require('../utils/util')
 const url_carpeta_logo = 'app/public/images_empresas/';
 
