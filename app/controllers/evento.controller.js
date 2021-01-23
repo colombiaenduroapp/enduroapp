@@ -6,7 +6,7 @@ const url_servidor = require('./url_services')
 const url_carpeta_logo='app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
-    pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc,ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 AND DATEDIFF(ev_fecha_inicio,now())>=0', (err, resul) => {
+    pool.query('SELECT ev_cdgo, ev_sede_sd_cdgo, ev_usuario_us_cdgo, DATE_FORMAT(ev_fecha_inicio,"%d/%M/%y") AS ev_fecha_inicio, DATE_FORMAT(ev_fecha_fin,"%d/%M/%y") AS ev_fecha_fin, ev_desc,ev_lugar, ev_img, us_nombres, sd_desc, DATEDIFF(ev_fecha_inicio,now()) AS ev_faltante, ev_url_video FROM evento JOIN usuario ON ev_usuario_us_cdgo=us_cdgo JOIN sede ON sd_cdgo=us_sede_sd_cdgo WHERE ev_estado=1 ', (err, resul) => {
         let url_image = url_servidor + 'evento/image/'
 
         for (let i = 0; i < resul.length; i++) {
