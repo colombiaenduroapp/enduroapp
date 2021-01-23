@@ -8,11 +8,10 @@ const url_carpeta_jersey='app/public/images_jersey_sedes/';
 
 sedes.getSedes = async(req, res) => {
     try {
-        const resultSedes = await pool.query('SELECT sd_cdgo, sd_desc, sd_logo, sd_jersey FROM sede WHERE sd_estado=1 ORDER BY sd_cdgo DESC')
+        const resultSedes = await pool.query('SELECT sd_cdgo, sd_desc, sd_logo FROM sede WHERE sd_estado=1 ORDER BY sd_cdgo DESC')
         if (resultSedes.length != 0) {            
             for (let i = 0; i < resultSedes.length; i++) {
                 if (resultSedes[i].sd_logo) resultSedes[i].sd_logo = url_servidor+'sede/image/'+resultSedes[i].sd_logo
-                if (resultSedes[i].sd_jersey) resultSedes[i].sd_jersey = url_servidor+'sede/imagejersey/'+resultSedes[i].sd_jersey
             }
             res.json({ status: true, data: resultSedes })           
         } else res.json({ status: false });
