@@ -116,5 +116,18 @@ eventos.searchEvento = async(req, res) => {
         })
     }
 }
+
+eventos.deleteEvento = async (req, res) => {
+    try {
+        await pool.query('UPDATE evento SET ? WHERE ev_cdgo=?', [{ev_estado: 0}, req.params.ev_cdgo])
+        res.json({ status: true })
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
+        })
+    }
+}
  
 module.exports = eventos;

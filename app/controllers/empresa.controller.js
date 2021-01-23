@@ -49,10 +49,9 @@ empresas.addEmpresa = async(req, res) => {
             em_correo: em_correo,
         }
         await pool.query('INSERT INTO empresa SET ?', datos)
-        res.json({ status: true });
+        res.status(200).json({ status: true });
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })  
