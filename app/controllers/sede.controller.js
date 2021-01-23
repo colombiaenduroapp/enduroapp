@@ -3,6 +3,7 @@ const  fs = require("fs");
 const sedes = {}
 const path = require('path');
 const url_servidor=require('./url_services')
+const { utilImage } = require('../utils/util')
 const url_carpeta_logo='app/public/images_sedes/';
 const url_carpeta_jersey='app/public/images_jersey_sedes/';
 
@@ -53,8 +54,8 @@ sedes.getImageJersey= async(req, res) =>{
 sedes.addSede= async(req, res)=>{
     try {
         const { sd_desc, sd_logo, sd_jersey, sd_ciudad_cd_cdgo } = req.body
-        const nombre_imagen_logo = (sd_logo) ? await guardarImagen(sd_desc, sd_logo, url_carpeta_logo) : null;
-        const nombre_imagen_jersey = (sd_jersey) ? await guardarImagen(sd_desc, sd_jersey, url_carpeta_jersey) : null;
+        const nombre_imagen_logo = (sd_logo) ? await utilImage.guardarImagen(sd_desc, sd_logo, url_carpeta_logo) : null;
+        const nombre_imagen_jersey = (sd_jersey) ? await utilImage.guardarImagen(sd_desc, sd_jersey, url_carpeta_jersey) : null;
         const datos={
             sd_desc: sd_desc,
             sd_logo: nombre_imagen_logo,
@@ -98,8 +99,8 @@ sedes.updateSede = async (req,res) => {
         const { sd_desc, sd_logo, sd_url_logo, sd_jersey, sd_url_jersey, sd_ciudad_cd_cdgo } = req.body;
         datos_actualizar.sd_desc = sd_desc;
         datos_actualizar.sd_ciudad_cd_cdgo = sd_ciudad_cd_cdgo
-        if (sd_logo) datos_actualizar.sd_logo = await guardarImagen(sd_desc, sd_logo, url_carpeta_logo)
-        if (sd_jersey) datos_actualizar.sd_jersey = await guardarImagen(sd_desc, sd_jersey, url_carpeta_jersey)
+        if (sd_logo) datos_actualizar.sd_logo = await utilImage.guardarImagen(sd_desc, sd_logo, url_carpeta_logo)
+        if (sd_jersey) datos_actualizar.sd_jersey = await utilImage.guardarImagen(sd_desc, sd_jersey, url_carpeta_jersey)
         
         const updateSede = await pool.query('UPDATE sede SET ? WHERE sd_cdgo=?', [datos_actualizar, sd_cdgo])
 
@@ -125,20 +126,6 @@ sedes.updateSede = async (req,res) => {
         })
     }
 }
-
-const guardarImagen = async(sd_desc, sd_imagen, url) => {
-    let nombre_sin_espacio = sd_desc.split(" ").join("")//quita los espacios al nombre
-    let date = new Date();
-    let nombre_imagen = date.getTime()+'_'+nombre_sin_espacio+'.png' // nombre de la logo, consta de un datatime y el nombre de la sede 
-    let data = sd_imagen.replace(/^data:image\/\w+;base64,/, '');// remueve valores innecesarios del data base64
-    let realFile = Buffer.from(data,"base64");// decodifica el base64 a una imagen
-    //almacena la logo en el servidor
-    fs.writeFile(url+nombre_imagen, realFile, function(err) {
-        if(err)
-           console.log(err);
-     });    
-     return nombre_imagen;
-};
 
 sedes.deleteSede = async (req, res) => {
     try {

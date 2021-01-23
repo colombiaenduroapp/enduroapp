@@ -3,6 +3,7 @@ const fs = require("fs");
 const eventos = {}
 const path = require('path')
 const url_servidor = require('./url_services')
+const { utilImage } = require('../utils/util')
 const url_carpeta_logo='app/public/images_eventos/'
 
 eventos.getEventos = async(req, res) => {
@@ -46,7 +47,7 @@ eventos.addEvento = async(req, res) => {
             ev_fecha_inicio: ev_fecha_inicio,
             ev_fecha_fin: ev_fecha_fin,
             ev_lugar: ev_lugar,
-            ev_img: await guardarImagen(ev_desc, ev_img, url_carpeta_logo),
+            ev_img: await utilImage.guardarImagen(ev_desc, ev_img, url_carpeta_logo),
             ev_url_video: ev_url_video
         }
         await pool.query('insert into evento set ?', datos)
@@ -72,7 +73,7 @@ eventos.updateEvento = async(req, res) => {
         datos_actualizar.ev_fecha_fin = ev_fecha_fin
         datos_actualizar.ev_lugar = ev_lugar
         datos_actualizar.ev_url_video = ev_url_video
-        if (ev_img) datos_actualizar.ev_img = await guardarImagen(ev_desc, ev_img, url_carpeta_logo)
+        if (ev_img) datos_actualizar.ev_img = await utilImage.guardarImagen(ev_desc, ev_img, url_carpeta_logo)
         
         const updateEvento = await pool.query('UPDATE evento SET ? WHERE ev_cdgo=?', [datos_actualizar, ev_cdgo])
 
@@ -115,19 +116,5 @@ eventos.searchEvento = async(req, res) => {
         })
     }
 }
-
-const guardarImagen = async(sd_desc, sd_imagen, ruta_imagen) => {
-    let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
-    let date = new Date();
-    let nombre_imagen = date.getTime() + '_' + nombre_sin_espacio + '.png' // nombre de la logo, consta de un datatime y el nombre de la sede 
-    let data = sd_imagen.replace(/^data:image\/\w+;base64,/, ''); // remueve valores innecesarios del data base64
-    let realFile = Buffer.from(data, "base64"); // decodifica el base64 a una imagen
-    //almacena la logo en el servidor
-    fs.writeFile(ruta_imagen + nombre_imagen, realFile, function(err) {
-        if (err)
-            console.log(err);
-    });
-    return nombre_imagen;
-};
  
 module.exports = eventos;
