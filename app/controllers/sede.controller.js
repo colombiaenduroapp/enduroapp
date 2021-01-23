@@ -14,11 +14,10 @@ sedes.getSedes = async(req, res) => {
             for (let i = 0; i < resultSedes.length; i++) {
                 if (resultSedes[i].sd_logo) resultSedes[i].sd_logo = url_servidor+'sede/image/'+resultSedes[i].sd_logo
             }
-            res.json({ status: true, data: resultSedes })           
-        } else res.json({ status: false });
+            res.status(200).json({ status: true, data: resultSedes })           
+        } else res.status(200).json({ status: false });
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -31,8 +30,7 @@ sedes.getImage= async(req, res) =>{
         fs.statSync(path.resolve(url_carpeta_logo + sd_image));
         res.sendFile(path.resolve(url_carpeta_logo + sd_image))
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code
         })
     }
@@ -44,8 +42,7 @@ sedes.getImageJersey= async(req, res) =>{
         fs.statSync(path.resolve(url_carpeta_jersey + sd_image));
         res.sendFile(path.resolve(url_carpeta_jersey + sd_image))
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code
         })
     }
@@ -63,10 +60,9 @@ sedes.addSede= async(req, res)=>{
             sd_ciudad_cd_cdgo: sd_ciudad_cd_cdgo
         }
         await pool.query('INSERT INTO sede SET ?', datos)
-        res.json({ status: true});
+        res.status(200).json({ status: true});
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -81,11 +77,10 @@ sedes.searchSede= async(req,res) => {
             if (resultSede[0].sd_logo) resultSede[0].sd_logo = url_servidor+'sede/image/'+resultSede[0].sd_logo
             if (resultSede[0].sd_jersey) resultSede[0].sd_jersey = url_servidor+'sede/imagejersey/'+resultSede[0].sd_jersey
             resultSede[0].sd_mesa_trabajo = await pool.query('SELECT us_nombres ,us_alias, ca_desc FROM usuario JOIN mesa_trabajo ON us_cdgo=mt_usuario_us_cdgo JOIN cargo ON ca_cdgo=mt_cargo_ca_cdgo WHERE us_sede_sd_cdgo=? AND us_estado=1 AND mt_estado=1',sd_cdgo)
-            res.json({ status: true, data: resultSede[0] })
-        } else res.json({ status: false });        
+            res.status(200).json({ status: true, data: resultSede[0] })
+        } else res.status(200).json({ status: false });        
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -114,13 +109,12 @@ sedes.updateSede = async (req,res) => {
                 if (sd_logo) fs.unlinkSync(url_carpeta_logo+datos_actualizar.sd_logo);
                 if (sd_jersey) fs.unlinkSync(url_carpeta_jersey+datos_actualizar.sd_jersey);
             } catch (error) { }
-            res.json({ status: false, message: 'Action denied'});
+            res.status(200).json({ status: false, message: 'Action denied'});
         }
-        res.json({ status: true });
+        res.status(200).json({ status: true });
 
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -130,10 +124,9 @@ sedes.updateSede = async (req,res) => {
 sedes.deleteSede = async (req, res) => {
     try {
         await pool.query('UPDATE sede SET ? WHERE sd_cdgo=?', [{sd_estado: 0}, req.params.sd_cdgo])
-        res.json({ status: true })
+        res.status(200).json({ status: true })
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })

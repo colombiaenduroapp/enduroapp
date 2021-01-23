@@ -13,11 +13,10 @@ empresas.getEmpresas = async (req, res) => {
             for (let i = 0; i < resultEmpresas.length; i++) {
                 if (resultEmpresas[i].em_logo) resultEmpresas[i].em_logo = url_servidor+'empresa/image/'+resultEmpresas[i].em_logo
             }
-            res.json({ status: true, data: resultEmpresas })
-        } else res.json({ status: false });        
+            res.status(200).json({ status: true, data: resultEmpresas })
+        } else res.status(200).json({ status: false });        
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -30,8 +29,7 @@ empresas.getImage = async(req, res) => {
         fs.statSync(path.resolve(url_carpeta_logo + em_img));
         res.sendFile(path.resolve(url_carpeta_logo + em_img))
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
         })
     }
@@ -64,10 +62,10 @@ empresas.searchEmpresa = async(req, res) => {
         const resultEmpresa = await pool.query('SELECT em_cdgo, em_nit, em_logo, em_nombre, em_desc,em_telefono, em_correo FROM empresa WHERE em_cdgo=? AND em_estado=1 LIMIT 1', em_cdgo)
         if (resultEmpresa.length != 0) {
             if (resultEmpresa[0].em_logo) resultEmpresa[0].em_logo = url_servidor+'empresa/image/'+resultEmpresa[0].em_logo
-            res.json({ status: true, data: resultEmpresa[0] })
-        } else res.json({ status: false });
+            res.status(200).json({ status: true, data: resultEmpresa[0] })
+        } else res.status(200).json({ status: false });
     } catch (error) {
-        res.json({
+        res.status(500).json({
             status: false,
             code: error.code,
             message: error.message
@@ -98,13 +96,12 @@ empresas.updateEmpresa = async(req, res) => {
             try {                
                 if (em_logo) fs.unlinkSync(url_carpeta_logo+datos_actualizar.em_logo);
             } catch (error) { }
-            res.json({ status: false, message: 'Action denied'});
+            res.status(200).json({ status: false, message: 'Action denied'});
         }
-        res.json({ status: true });
+        res.status(200).json({ status: true });
 
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -114,10 +111,9 @@ empresas.updateEmpresa = async(req, res) => {
 empresas.deleteEmpresa = async (req, res) => {
     try {
         await pool.query('UPDATE empresa SET ? WHERE em_cdgo=?', [{em_estado: 0}, req.params.em_cdgo])
-        res.json({ status: true })
+        res.status(200).json({ status: true })
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })

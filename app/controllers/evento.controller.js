@@ -13,11 +13,10 @@ eventos.getEventos = async(req, res) => {
             for (let i = 0; i < resultEventos.length; i++) {
                 if (resultEventos[i].ev_img) resultEventos[i].ev_img = url_servidor+'evento/image/'+resultEventos[i].ev_img
             }
-            res.json({ status: true, data: resultEventos })
-        } else  res.json({ status: false });
+            res.status(200).json({ status: true, data: resultEventos })
+        } else  res.status(200).json({ status: false });
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -30,8 +29,7 @@ eventos.getImage = async(req, res) => {
         fs.statSync(path.resolve(url_carpeta_logo + ev_img));
         res.sendFile(path.resolve(url_carpeta_logo + ev_img))
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
         })
     }
@@ -51,10 +49,9 @@ eventos.addEvento = async(req, res) => {
             ev_url_video: ev_url_video
         }
         await pool.query('insert into evento set ?', datos)
-        res.json({ status: true });
+        res.status(200).json({ status: true });
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -85,13 +82,12 @@ eventos.updateEvento = async(req, res) => {
             try {                
                 if (ev_img) fs.unlinkSync(url_carpeta_logo+datos_actualizar.ev_img);
             } catch (error) { }
-            res.json({ status: false, message: 'Action denied'});
+            res.status(200).json({ status: false, message: 'Action denied'});
         }
-        res.json({ status: true });
+        res.status(200).json({ status: true });
 
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
@@ -105,11 +101,11 @@ eventos.searchEvento = async(req, res) => {
         
         if (resultEvento.length != 0) {
             if (resultEvento[0].ev_img) resultEvento[0].ev_img = url_servidor+'evento/image/'+resultEvento[0].ev_img
-            res.json({ status: true, data: resultEvento[0] })
-        } else res.json({ status: false })
+            res.status(200).json({ status: true, data: resultEvento[0] })
+        } else res.status(200).json({ status: false })
         
     } catch (error) {
-        res.json({
+        res.status(500).json({
             status: false,
             code: error.code,
             message: error.message
@@ -120,10 +116,9 @@ eventos.searchEvento = async(req, res) => {
 eventos.deleteEvento = async (req, res) => {
     try {
         await pool.query('UPDATE evento SET ? WHERE ev_cdgo=?', [{ev_estado: 0}, req.params.ev_cdgo])
-        res.json({ status: true })
+        res.status(200).json({ status: true })
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })
