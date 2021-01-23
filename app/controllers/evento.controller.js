@@ -61,83 +61,40 @@ eventos.addEvento = async(req, res) => {
 }
 
 eventos.updateEvento = async(req, res) => {
-    const ev_cdgo = req.params.ev_cdgo
-    let us_sede_sd_cdgo = req.body.us_sede_sd_cdgo
-    let us_cdgo = req.body.us_cdgo;
-    let ev_desc = req.body.ev_desc;
-    let ev_fecha_inicio = req.body.ev_fecha_inicio;
-    let ev_fecha_fin = req.body.ev_fecha_fin;
-    let ev_lugar = req.body.ev_lugar;
-    let ev_img = req.body.ev_img;
-    let ev_url_img = req.body.ev_url_img;
-    let ev_url_video = req.body.ev_url_video;
-    let datos_actualizar = {};
+    try {
+        let datos_actualizar = {};
+        const { ev_cdgo } = req.params
+        const { us_sede_sd_cdgo, us_cdgo, ev_desc, ev_fecha_inicio, ev_fecha_fin, ev_lugar, ev_img, ev_url_img, ev_url_video } = req.body
+        datos_actualizar.ev_sede_sd_cdgo =  us_sede_sd_cdgo
+        datos_actualizar.ev_usuario_us_cdgo =  us_cdgo
+        datos_actualizar.ev_desc = ev_desc
+        datos_actualizar.ev_fecha_inicio = ev_fecha_inicio
+        datos_actualizar.ev_fecha_fin = ev_fecha_fin
+        datos_actualizar.ev_lugar = ev_lugar
+        datos_actualizar.ev_url_video = ev_url_video
+        if (ev_img) datos_actualizar.ev_img = await guardarImagen(ev_desc, ev_img, url_carpeta_logo)
+        
+        const updateEvento = await pool.query('UPDATE evento SET ? WHERE ev_cdgo=?', [datos_actualizar, ev_cdgo])
 
-
-    if (ev_img != '') {
-
-        datos_actualizar = {
-            ev_sede_sd_cdgo: us_sede_sd_cdgo,
-            ev_usuario_us_cdgo: us_cdgo,
-            ev_desc: ev_desc,
-            ev_fecha_inicio: ev_fecha_inicio,
-            ev_fecha_fin: ev_fecha_fin,
-            ev_lugar: ev_lugar,
-            ev_img: await guardarImagen(ev_desc, ev_img, url_carpeta_logo),
-            ev_url_video: ev_url_video,
+        if (updateEvento.affectedRows) {
+            try {                
+                if (ev_img && ev_url_img) fs.unlinkSync(url_carpeta_logo+ev_url_img);
+            } catch (error) { }
+        } else {
+            try {                
+                if (ev_img) fs.unlinkSync(url_carpeta_logo+datos_actualizar.ev_img);
+            } catch (error) { }
+            res.json({ status: false, message: 'Action denied'});
         }
-        await pool.query('update evento set ? where ev_cdgo=?', [datos_actualizar, ev_cdgo], (err, resul) => {
-            if (err) {
-                try {
-                    fs.unlinkSync(url_carpeta_logo + datos_actualizar.ev_img);
-                    console.log('File removed')
-                } catch (err) {
-                    console.error('Something wrong happened removing the file', err)
-                }
+        res.json({ status: true });
 
-                console.log(err);
-            } else {
-                try {
-                    fs.unlinkSync(url_carpeta_logo + ev_url_img);
-                    console.log('File removed')
-                } catch (err) {
-                    console.error('Something wrong happened removing the file', err)
-                }
-                res.json({ status: true });
-            }
-
-        }, )
-
-    } else {
-        datos_actualizar = {
-            ev_sede_sd_cdgo: us_sede_sd_cdgo,
-            ev_usuario_us_cdgo: us_cdgo,
-
-            ev_fecha_inicio: ev_fecha_inicio,
-            ev_fecha_fin: ev_fecha_fin,
-            ev_desc: ev_desc,
-            ev_lugar: ev_lugar,
-
-            // ev_url_video:ev_url_video,
-        }
-
-        await pool.query('update evento set ? where ev_cdgo=?', [datos_actualizar, ev_cdgo], (err, resul) => {
-            if (err) {
-                console.log(err);
-
-            } else {
-                console.log('success');
-                res.json({ status: true });
-            }
-
+    } catch (error) {
+        res.json({
+            status: false,
+            code: error.code,
+            message: error.message
         })
-
-
     }
-
-
-    res.status(200).json({ status: true });
-
 }
 
 eventos.searchEvento = async(req, res) => {
