@@ -2,7 +2,8 @@ const pool = require('../config/conection');
 const fs = require("fs");
 const empresas = {}
 const path = require('path')
-const url_servidor = require('./url_services')
+const url_servidor = require('../config/url_services')
+const { utilImage } = require('../utils/util')
 const url_carpeta_logo = 'app/public/images_empresas/';
 
 empresas.getEmpresas = async (req, res) => {
@@ -41,7 +42,7 @@ empresas.addEmpresa = async(req, res) => {
         const { em_nit, em_logo, em_nombre, em_desc, em_telefono, em_correo } = req.body
         const datos = {
             em_nit: em_nit,
-            em_logo: (em_logo) ? await guardarImagen(em_nombre, em_logo, url_carpeta_logo): null,
+            em_logo: (em_logo) ? await utilImage.guardarImagen(em_nombre, em_logo, url_carpeta_logo): null,
             em_nombre: em_nombre,
             em_desc: em_desc,
             em_telefono: em_telefono,
@@ -86,7 +87,7 @@ empresas.updateEmpresa = async(req, res) => {
         datos_actualizar.em_telefono = em_telefono
         datos_actualizar.em_correo = em_correo
         
-        if (em_logo) datos_actualizar.em_logo = await guardarImagen(em_nombre, em_logo, url_carpeta_logo)
+        if (em_logo) datos_actualizar.em_logo = await utilImage.guardarImagen(em_nombre, em_logo, url_carpeta_logo)
         
         const updateEmpresa = await pool.query('UPDATE empresa SET ? WHERE em_cdgo=?', [datos_actualizar, em_cdgo])
 
@@ -110,22 +111,6 @@ empresas.updateEmpresa = async(req, res) => {
         })
     }
 }
-
-const guardarImagen = async(sd_desc, sd_imagen, url) => {
-    let nombre_sin_espacio = sd_desc.split(" ").join("") //quita los espacios al nombre
-    let date = new Date();
-    let ruta_imagen = url; //carpeta donde se guardara la logo
-    let nombre_imagen = date.getTime() + '_' + nombre_sin_espacio + '.png' // nombre de la logo, consta de un datatime y el nombre de la sede 
-    let data = sd_imagen.replace(/^data:image\/\w+;base64,/, ''); // remueve valores innecesarios del data base64
-    let realFile = Buffer.from(data, "base64"); // decodifica el base64 a una imagen
-    //almacena la logo en el servidor
-    fs.writeFile(ruta_imagen + nombre_imagen, realFile, function(err) {
-        if (err)
-            console.log(err);
-    });
-
-    return nombre_imagen;
-};
 
 empresas.deleteEmpresa = async (req, res) => {
     try {
