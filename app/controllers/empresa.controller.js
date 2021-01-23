@@ -25,7 +25,7 @@ empresas.getEmpresas = async (req, res) => {
 
 empresas.getImage = async(req, res) => {
     try {
-        let em_img = req.params.em_img
+        const { em_img } = req.params
         fs.statSync(path.resolve(url_carpeta_logo + em_img));
         res.sendFile(path.resolve(url_carpeta_logo + em_img))
     } catch (error) {
