@@ -63,11 +63,11 @@ empresas.searchEmpresa = async(req, res) => {
         const resultEmpresa = await pool.query('SELECT em_cdgo, em_nit, em_logo, em_nombre, em_desc,em_telefono, em_correo FROM empresa WHERE em_cdgo=? AND em_estado=1 LIMIT 1', em_cdgo)
         if (resultEmpresa.length != 0) {
             if (resultEmpresa[0].em_logo) resultEmpresa[0].em_logo = url_servidor+'empresa/image/'+resultEmpresa[0].em_logo
+            resultEmpresa[0].em_convenios = await pool.query('SELECT co_cdgo, co_desc, tp_desc FROM convenios JOIN tipo_convenios ON tp_cdgo=co_tipo_convenios_tp_cdgo WHERE co_empresa_em_cdgo=? AND co_estado=1',em_cdgo)
             res.status(200).json({ status: true, data: resultEmpresa[0] })
         } else res.status(200).json({ status: false });
     } catch (error) {
         res.status(500).json({
-            status: false,
             code: error.code,
             message: error.message
         })

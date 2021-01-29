@@ -5,5 +5,6 @@ router.use('/ciudad', require('./ciudad.route'));
 router.use('/evento', require('./evento.route'));
 router.use('/empresa', require('./empresa.route'));
 router.use('/tipo_convenios', require('./tipoConvenios.route'))
+router.use('/convenios', require('./convenios.route'))
 
 module.exports = router
