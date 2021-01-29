@@ -37,7 +37,7 @@ empresas.getImage = async(req, res) => {
 
 empresas.addEmpresa = async(req, res) => {
     try {
-        const { em_nit, em_logo, em_nombre, em_desc, em_telefono, em_correo } = req.body
+        const { em_nit, em_logo, em_nombre, em_desc, em_telefono, em_correo, em_sede_sd_cdgo } = req.body
         const datos = {
             em_nit: em_nit,
             em_logo: (em_logo) ? await utilImage.guardarImagen(em_nombre, em_logo, url_carpeta_logo): null,
@@ -45,6 +45,7 @@ empresas.addEmpresa = async(req, res) => {
             em_desc: em_desc,
             em_telefono: em_telefono,
             em_correo: em_correo,
+            em_sede_sd_cdgo: em_sede_sd_cdgo
         }
         await pool.query('INSERT INTO empresa SET ?', datos)
         res.status(200).json({ status: true });

@@ -4,11 +4,10 @@ const ciudad = {}
 ciudad.getCiudad = async(req, res) => {
     try {
         const resultCiudades = await pool.query('SELECT cd_cdgo AS id, cd_desc as nombre FROM ciudad WHERE cd_estado=1 ORDER BY cd_desc ASC') 
-        if (resultCiudades.length != 0) res.json({ status: true, data: resultCiudades })
-        else res.json({ status: false })
+        if (resultCiudades.length != 0) res.status(200).json({ status: true, data: resultCiudades })
+        else res.status(200).json({ status: false })
     } catch (error) {
-        res.json({
-            status: false,
+        res.status(500).json({
             code: error.code,
             message: error.message
         })   
