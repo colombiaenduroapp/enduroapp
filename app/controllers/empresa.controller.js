@@ -3,7 +3,7 @@ const fs = require("fs");
 const empresas = {}
 const path = require('path')
 const url_servidor = require('../config/url_services')
-const { utilImage } = require('../utils/util')
+const { utilImage } = require('../utils/image')
 const url_carpeta_logo = 'app/public/images_empresas/';
 
 empresas.getEmpresas = async (req, res) => {

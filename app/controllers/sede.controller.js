@@ -3,7 +3,8 @@ const  fs = require("fs");
 const sedes = {}
 const path = require('path');
 const url_servidor = require('../config/url_services')
-const { utilImage } = require('../utils/util')
+const { utilImage } = require('../utils/image')
+const { utilText } = require('../utils/text')
 const url_carpeta_logo = 'app/public/images_sedes/';
 const url_carpeta_jersey = 'app/public/images_jersey_sedes/';
 

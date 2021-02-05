@@ -1,6 +1,5 @@
 const fs = require("fs");
 const utilImage = {} 
-const utilText = {}
 
 utilImage.guardarImagen = async(imageName, image, imagePath) => {
     let nombre_sin_espacio = imageName.split(" ").join("") //quita los espacios al nombre
@@ -16,8 +15,4 @@ utilImage.guardarImagen = async(imageName, image, imagePath) => {
     return nombre_imagen;
 };
 
-
-module.exports = {
-    utilImage,
-    utilText
-}
+module.exports = { utilImage }
