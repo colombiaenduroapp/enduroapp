@@ -18,6 +18,7 @@ const convenios = {}
     }    
 }
 
+
 sedes.addSede= async(req, res)=>{
     try {
         const { sd_desc, sd_logo, sd_jersey, sd_ciudad_cd_cdgo } = req.body
