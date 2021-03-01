@@ -14,7 +14,7 @@ app.use(cors())
 
 // socket's
 io.on("data", (d) => {
-    
+    console.log('Hola');
 })
 
 //routes
