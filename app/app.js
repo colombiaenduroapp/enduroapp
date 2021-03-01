@@ -6,15 +6,17 @@ const ip = require('ip');
 const host = ip.address()
 const morgan = require('morgan')
 const cors = require('cors')
-const io = require('socket.io')(http)
+const io = require('socket.io')(http, {
+    path:"/socket/"
+})
 
 app.use(express.urlencoded({ extended: false, limit: (52428800) }))
 app.use(morgan('dev'))
 app.use(cors())
 
 // socket's
-io.on("data", (d) => {
-    console.log('Hola');
+io.on("connection", (socket) => {
+    socket.emit('event', "Lo logramos" )
 })
 
 //routes
